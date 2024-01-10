@@ -11,13 +11,26 @@ class Zookeeper(db.Model):
     __tablename__ = 'zookeepers'
 
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    birthday = db.Column(db.Date)
+    animals = db.relationship('Animal', backref='zookeeper_ref')
 
 class Enclosure(db.Model):
     __tablename__ = 'enclosures'
 
     id = db.Column(db.Integer, primary_key=True)
+    environment = db.Column(db.String)
+    open_to_visitors = db.Column(db.Boolean)
+    animals = db.relationship('Animal', backref='enclosure_ref')
 
 class Animal(db.Model):
     __tablename__ = 'animals'
 
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    species = db.Column(db.String)
+    zookeper_id = db.Column(db.Integer, db.ForeignKey('zookeepers.id'))
+    enclosure_id = db.Column(db.Integer, db.ForeignKey('enclosures.id'))
+    
+    zookeper = db.relationship('Zookeeper', backref='animals_ref')
+    enclosure = db.relationship('Enclosure', backref='animals_ref')
